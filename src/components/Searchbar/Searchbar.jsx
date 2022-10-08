@@ -18,6 +18,10 @@ class Searchbar extends Component {
 
   handleSubmit = evt => {
     evt.preventDefault();
+    if (this.state.request.trim() === '') {
+      alert('Введите название картинки!');
+      return;
+    }
     this.props.onSubmit(this.state.request);
     this.reset();
   };
