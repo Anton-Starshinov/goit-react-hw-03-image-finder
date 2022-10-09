@@ -2,7 +2,6 @@ import fetchImg from 'API';
 import React, { Component } from 'react';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
-import { Dna } from 'react-loader-spinner';
 import Loader from 'components/Loader/Loader';
 
 class ImageGallery extends Component {
