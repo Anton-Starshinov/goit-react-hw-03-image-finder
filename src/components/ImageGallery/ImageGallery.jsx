@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
 import Loader from 'components/Loader/Loader';
+import Button from 'components/Button/Button';
 
 class ImageGallery extends Component {
   state = {
@@ -13,12 +14,13 @@ class ImageGallery extends Component {
 
   componentDidUpdate = async (prevProps, prevState) => {
     const { request } = this.props;
+    const { page, images } = this.state;
+    const updatePage = prevProps.request !== request ? 1 : page;
 
-    if (prevProps.request !== request) {
-      console.log('prop', this.props.request);
+    if (prevProps.request !== request || prevState.page !== page) {
       try {
         this.setState({ loading: true });
-        const imgApi = await fetchImg(request);
+        const imgApi = await fetchImg(request, page);
         this.setState({ images: [...this.state.images, ...imgApi] });
       } catch (error) {
         console.log(error);
@@ -26,6 +28,10 @@ class ImageGallery extends Component {
         this.setState({ loading: false });
       }
     }
+  };
+
+  loadMore = () => {
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   render() {
@@ -42,6 +48,9 @@ class ImageGallery extends Component {
             />
           ))}
         </ImageGalleryList>
+        {images.length !== 0 && images.length >= 12 && (
+          <Button onClickLoadMore={this.loadMore} />
+        )}
         {loading && <Loader />}
       </div>
     );
