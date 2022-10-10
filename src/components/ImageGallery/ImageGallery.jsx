@@ -10,20 +10,25 @@ class ImageGallery extends Component {
     images: [],
     page: 1,
     loading: false,
+    error: null,
   };
 
   componentDidUpdate = async (prevProps, prevState) => {
     const { request } = this.props;
     const { page, images } = this.state;
-    const updatePage = prevProps.request !== request ? 1 : page;
+
+    if (prevProps.request !== request) {
+      this.setState({ images: [], page: 1 });
+    }
 
     if (prevProps.request !== request || prevState.page !== page) {
       try {
         this.setState({ loading: true });
         const imgApi = await fetchImg(request, page);
-        this.setState({ images: [...this.state.images, ...imgApi] });
+
+        this.setState({ images: [...images, ...imgApi] });
       } catch (error) {
-        console.log(error);
+        this.setState({ error });
       } finally {
         this.setState({ loading: false });
       }
@@ -35,7 +40,7 @@ class ImageGallery extends Component {
   };
 
   render() {
-    const { images, loading } = this.state;
+    const { images, loading, error } = this.state;
 
     return (
       <div>
@@ -48,7 +53,8 @@ class ImageGallery extends Component {
             />
           ))}
         </ImageGalleryList>
-        {images.length !== 0 && images.length >= 12 && (
+        {error && <p>Whoops, something went wrong</p>}
+        {images.length !== 0 && images.length >= 12 && images.length < 500 && (
           <Button onClickLoadMore={this.loadMore} />
         )}
         {loading && <Loader />}
