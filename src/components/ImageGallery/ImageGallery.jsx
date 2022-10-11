@@ -1,4 +1,5 @@
 import fetchImg from 'API';
+import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { ImageGalleryList } from './ImageGallery.styled';
@@ -64,3 +65,7 @@ class ImageGallery extends Component {
 }
 
 export default ImageGallery;
+
+ImageGallery.propType = {
+  request: PropTypes.string.isRequired,
+};
